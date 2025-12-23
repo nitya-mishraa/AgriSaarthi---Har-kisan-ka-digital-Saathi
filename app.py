@@ -66,13 +66,21 @@ with app.app_context():
 
 # ================= ROUTES ===================
 
-@app.route("/")
+# ---------- HOME ----------
+@app.route("/", endpoint="index")
 def index():
     return render_template("index.html")
 
 
+# ---------- PROFILE ----------
+@app.route("/profile", endpoint="profile")
+@login_required
+def profile():
+    return render_template("profile.html")
+
+
 # ---------- AUTH ----------
-@app.route("/register", methods=["GET", "POST"])
+@app.route("/register", methods=["GET", "POST"], endpoint="register")
 def register():
     if request.method == "POST":
         user = User(
@@ -86,7 +94,7 @@ def register():
     return render_template("register.html")
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"], endpoint="login")
 def login():
     if request.method == "POST":
         user = User.query.filter_by(username=request.form["username"]).first()
@@ -97,7 +105,7 @@ def login():
     return render_template("login.html")
 
 
-@app.route("/logout")
+@app.route("/logout", endpoint="logout")
 @login_required
 def logout():
     logout_user()
@@ -105,7 +113,7 @@ def logout():
 
 
 # ---------- CROP RECOMMENDATION ----------
-@app.route("/crop-recommendation", methods=["GET", "POST"])
+@app.route("/crop-recommendation", methods=["GET", "POST"], endpoint="crop_recommendation")
 def crop_recommendation():
     if request.method == "POST":
         try:
@@ -132,7 +140,7 @@ def crop_recommendation():
 
 
 # ---------- FERTILIZER RECOMMENDATION ----------
-@app.route("/fertilizer-recommendation", methods=["GET", "POST"])
+@app.route("/fertilizer-recommendation", methods=["GET", "POST"], endpoint="fertilizer_recommendation")
 def fertilizer_recommendation():
 
     crops, soils = get_crop_and_soil_lists()
@@ -175,7 +183,7 @@ def fertilizer_recommendation():
 
 
 # ---------- DISEASE DETECTION ----------
-@app.route("/disease-detection", methods=["GET", "POST"])
+@app.route("/disease-detection", methods=["GET", "POST"], endpoint="disease_detection")
 def disease_detection():
     if request.method == "POST":
         try:
@@ -217,27 +225,38 @@ def disease_detection():
 
 
 # ---------- KNOWLEDGE HUB ----------
-@app.route("/knowledge-hub")
+@app.route("/knowledge-hub", endpoint="knowledge_hub")
 def knowledge_hub():
     return render_template("knowledge_hub.html")
 
 
 # ---------- FARM DIARY ----------
-@app.route("/farm-diary")
+@app.route("/farm-diary", methods=["GET", "POST"])
 @login_required
 def farm_diary():
+    if request.method == "POST":
+       
+        flash("Farm diary entry added successfully 🌱")
+        return redirect(url_for("farm_diary"))
+
     return render_template("farm_diary.html")
 
 
+
 # ---------- TASK PLANNER ----------
-@app.route("/task-planner")
+@app.route("/task-planner", methods=["GET", "POST"])
 @login_required
 def task_planner():
+    if request.method == "POST":
+        flash("Task added to Krishi Calendar 📅")
+        return redirect(url_for("task_planner"))
+
     return render_template("task_planner.html")
 
 
+
 # ---------- LANGUAGE ----------
-@app.route("/set-language", methods=["POST"])
+@app.route("/set-language", methods=["POST"], endpoint="set_language")
 def set_language():
     session["language"] = request.form.get("language", "en")
     return redirect(request.referrer or url_for("index"))
