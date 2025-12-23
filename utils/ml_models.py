@@ -61,52 +61,6 @@ def predict_crop(nitrogen, phosphorus, potassium, temperature, humidity, ph, rai
             else:
                 return "Soybean"
 
-# Fertilizer recommendation model
-def predict_fertilizer(nitrogen, phosphorus, potassium, crop_type):
-    """
-    Predict the best fertilizer based on soil nutrients and crop type.
-    
-    Args:
-        nitrogen (float): Nitrogen content in soil (mg/kg)
-        phosphorus (float): Phosphorus content in soil (mg/kg)
-        potassium (float): Potassium content in soil (mg/kg)
-        crop_type (str): Type of crop
-        
-    Returns:
-        str: Recommended fertilizer with explanation
-    """
-    # Simplified logic for fertilizer recommendation
-    # In a real implementation, this would use a trained ML model
-    
-    # Determine nutrient levels
-    n_level = "low" if nitrogen < 30 else "medium" if nitrogen < 60 else "high"
-    p_level = "low" if phosphorus < 20 else "medium" if phosphorus < 40 else "high"
-    k_level = "low" if potassium < 20 else "medium" if potassium < 40 else "high"
-    
-    if n_level == "low":
-        if p_level == "low":
-            return "NPK (High Nitrogen & Phosphorus): Your soil is deficient in both nitrogen and phosphorus. Apply a balanced NPK fertilizer with higher N and P content."
-        elif k_level == "low":
-            return "NPK (High Nitrogen & Potassium): Your soil needs more nitrogen and potassium. Use an NK-rich fertilizer."
-        else:
-            return "Urea or Ammonium Sulfate: Your soil primarily needs nitrogen. Apply urea or ammonium sulfate fertilizer."
-    elif p_level == "low":
-        if k_level == "low":
-            return "NPK (High Phosphorus & Potassium): Your soil is deficient in phosphorus and potassium. Use a PK-rich fertilizer."
-        else:
-            return "Single Super Phosphate: Your soil mainly needs phosphorus. Apply superphosphate fertilizer."
-    elif k_level == "low":
-        return "Muriate of Potash (MOP): Your soil requires more potassium. Apply potassium-rich fertilizers like MOP."
-    else:
-        if crop_type.lower() in ["rice", "wheat", "maize", "sugarcane"]:
-            return "Balanced NPK + Micronutrients: Your soil has adequate macronutrients. Apply a balanced fertilizer with micronutrients for optimal crop growth."
-        elif crop_type.lower() in ["pulses", "chickpea", "lentil", "pea"]:
-            return "Phosphorus & Micronutrients: Leguminous crops like pulses fix their own nitrogen. Focus on phosphorus and micronutrients."
-        elif crop_type.lower() in ["cotton", "mustard", "sunflower"]:
-            return "Nitrogen & Sulfur Rich: These crops benefit from additional nitrogen and sulfur. Consider ammonium sulfate or sulfur-coated urea."
-        else:
-            return "Balanced NPK Fertilizer: Apply a standard balanced fertilizer appropriate for your crop type."
-
 # Plant disease detection model
 def detect_disease(image_base64):
     """
